@@ -121,19 +121,27 @@ end
 
 function TesterWebGui:setInteraction(strFilename, atReplace)
   local tResult
+  local tLog = self.tLog
 
   -- Read the interaction code.
   local strJsxTemplate, strErr = self.pl.file.read(strFilename)
   if strJsxTemplate==nil then
-    self.tLog.error('Failed to read JSX from "%s": %s', strFilename, strErr)
+    tLog.error('Failed to read JSX from "%s": %s', strFilename, strErr)
   else
-    local strJsx
+    local strJsx = strJsxTemplate
 
     -- Replace something?
-    if atReplace==nil then
-      strJsx = strJsxTemplate
-    else
-      strJsx = string.gsub(strJsxTemplate, '@([%w_]+)@', atReplace)
+    if atReplace~=nil then
+      local uiReplMax = 128
+      repeat
+        local uiReplCnt
+        strJsx, uiReplCnt = string.gsub(strJsx, '@([%w_]+)@', atReplace)
+        uiReplMax = uiReplMax - 1
+        if uiReplMax<=0 then
+          tLog.warning('Stopped nested replacements after 128 loops.')
+          break
+        end
+      until uiReplCnt==0
     end
 
     self.tSocket:send(string.format('INT%s', strJsx))
