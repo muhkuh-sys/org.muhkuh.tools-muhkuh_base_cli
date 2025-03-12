@@ -99,7 +99,7 @@ function TesterWebGui:getCommonPlugin(strInterfacePattern, atPluginOptions)
       if tInterface==nil then
         print(string.format('The interface with the index %d does not exist.', iSelectedInterfaceIndex))
       else
-        strInterfaceName = tInterface:GetName()
+        local strInterfaceName = tInterface:GetName()
         print(string.format('Connecting to interface "%s".', strInterfaceName))
 
         tPlugin = tInterface:Create()
