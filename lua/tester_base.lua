@@ -396,4 +396,16 @@ function TesterBase:getDataItem(strItemName, tLocalConfig)
 end
 
 
+function TesterBase:getDataItemCfg(strItemName, tLocalConfig)
+  local tResult, tMergedParameter
+
+  local tDataProvider = self.m_tDataProvider
+  if tDataProvider~=nil then
+    tResult, tMergedParameter = tDataProvider:getCfg(strItemName, tLocalConfig)
+  end
+
+  return tResult, tMergedParameter
+end
+
+
 return TesterBase
