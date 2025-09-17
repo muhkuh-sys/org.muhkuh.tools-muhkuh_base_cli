@@ -13,6 +13,20 @@ function TesterBase:_init()
   self.tSocket = nil
   self.m_atSystemParameter = nil
   self.m_tDataProvider = nil
+  self.m_tOrderInfo = nil
+end
+
+
+
+function TesterBase:setOrderInfo(tOrderInfo)
+  local tablex = require 'pl.tablex'
+  self.m_tOrderInfo = tablex.deepcopy(tOrderInfo)
+end
+
+
+
+function TesterBase:getOrderInfo()
+  return self.m_tOrderInfo
 end
 
 
