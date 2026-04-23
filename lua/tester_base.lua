@@ -73,14 +73,65 @@ end
 
 
 
-function TesterBase.callback_progress(a,b)
-  print(string.format("%d%% (%d/%d)", math.floor(a*100/b), a, b))
+function TesterBase.callback_progress(a, b)
+  local strMsg = string.format('%d%% (%d/%d)', math.floor(a*100/b), a, b)
+  local tTester = _G.tester
+  if type(tTester)=='table' and type(tTester.tLog)=='table' then
+    tTester.tLog.debug('%s', strMsg)
+  else
+    print(strMsg)
+  end
   return true
 end
 
 
+
+function TesterBase:__callbackPrettyInit()
+  self.m_strCallbackBuffer = ''
+end
+
+
+
+function TesterBase:__callbackPretty(a, b)
+  -- Combine any remaining data in the buffer with the new chunk.
+  local strData = (self.m_strCallbackBuffer or '') .. a
+
+  -- Does the data end with a newline?
+  local fHasEnd = (string.sub(strData, -1) == '\n')
+  -- Split the data into lines.
+  local astrLines = require 'pl.stringx'.splitlines(strData, false)
+
+  -- If the data ends with a linefeed, fHasEnd is true. In this case all can be printed.
+  -- Otherwise the last line might not be complete yet. Keep in the buffer until more
+  -- arrives or "__callbackPrettyFlush" is called.
+  self.m_strCallbackBuffer = (fHasEnd==true) and '' or table.remove(astrLines)
+
+  -- Print all remaining lines.
+  local tLog = self.tLog
+  for _, strLine in ipairs(astrLines) do
+    tLog.debug(strLine)
+  end
+end
+
+
+
+function TesterBase:__callbackPrettyFlush()
+  local strLine = self.m_strCallbackBuffer
+  if strLine~=nil and strLine~='' then
+    self.tLog.debug(strLine)
+    self.m_strCallbackBuffer = ''
+  end
+end
+
+
+
 function TesterBase.callback(a,b)
-  io.write(a)
+  local tTester = _G.tester
+  if type(tTester)=='table' then
+    tTester:__callbackPretty(a, b)
+  else
+    io.write(a)
+  end
   return true
 end
 
@@ -99,10 +150,13 @@ end
 
 
 function TesterBase:stdCall(tPlugin, ulAddress, ulParameter)
-  print('__/Output/____________________________________________________________________')
+  local tLog = self.tLog
+  tLog.debug('__/Output/____________________________________________________________________')
+  self:__callbackPrettyInit()
   tPlugin:call(ulAddress, ulParameter, self.callback, 0)
-  print('')
-  print('______________________________________________________________________________')
+  self:__callbackPrettyFlush()
+  tLog.debug('')
+  tLog.debug('______________________________________________________________________________')
 end
 
 
@@ -275,10 +329,13 @@ function TesterBase:mbin_execute(tPlugin, aAttr, aParameter, fnCallback, ulUserD
     ulUserData = 0
   end
 
-  print('__/Output/____________________________________________________________________')
+  local tLog = self.tLog
+  tLog.debug('__/Output/____________________________________________________________________')
+  self:__callbackPrettyInit()
   tPlugin:call(aAttr.ulExecAddress, aAttr.ulParameterStartAddress, fnCallback, ulUserData)
-  print('')
-  print('______________________________________________________________________________')
+  self:__callbackPrettyFlush()
+  tLog.debug('')
+  tLog.debug('______________________________________________________________________________')
 
   -- Read the result status.
   local ulResult = tPlugin:read_data32(aAttr.ulParameterStartAddress)
