@@ -1,0 +1,7 @@
+{
+    "project": {
+        "group": "org.muhkuh.tools",
+        "module": "muhkuh_base_cli",
+        "version": "3.0.0"
+    }
+}
