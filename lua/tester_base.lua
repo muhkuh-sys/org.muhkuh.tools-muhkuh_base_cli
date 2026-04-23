@@ -206,23 +206,25 @@ function TesterBase:mbin_open(strFilename, tPlugin)
 
     -- Get the binary for the ASIC.
     local strAsic
-    if tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX4000_RELAXED or tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX4000_FULL or tAsicTyp==romloader.ROMLOADER_CHIPTYP_NET4100_SMALL then
+    local chiptyp = require 'muhkuh.plugins.chiptyp'
+    local atChipTyp = chiptyp.atChipTyp
+    if tAsicTyp==atChipTyp.NETX4000_RELAXED or tAsicTyp==atChipTyp.NETX4000_FULL or tAsicTyp==atChipTyp.NET4100_SMALL then
       strAsic = "4000"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX100 or tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX500 then
+    elseif tAsicTyp==atChipTyp.NETX100 or tAsicTyp==atChipTyp.NETX500 then
       strAsic = "500"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX90_MPW then
+    elseif tAsicTyp==atChipTyp.NETX90_MPW then
       strAsic = "90_mpw"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX90 then
+    elseif tAsicTyp==atChipTyp.NETX90 then
       strAsic = "90"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX90B then
+    elseif tAsicTyp==atChipTyp.NETX90B then
       strAsic = "90b"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX56 or tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX56B then
+    elseif tAsicTyp==atChipTyp.NETX56 or tAsicTyp==atChipTyp.NETX56B then
       strAsic = "56"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX50 then
+    elseif tAsicTyp==atChipTyp.NETX50 then
       strAsic = "50"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX10 then
+    elseif tAsicTyp==atChipTyp.NETX10 then
       strAsic = "10"
-    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX9X2_MPW then
+    elseif tAsicTyp==atChipTyp.NETX9X2_MPW then
       strAsic = '9x2mpw'
     else
       error(string.format('Unknown chiptyp %s.', tostring(tAsicTyp)))
