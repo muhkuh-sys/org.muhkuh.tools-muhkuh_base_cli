@@ -12,6 +12,14 @@ atEnv:createEnv('Muhkuh', {}, {})
 local dir,file = require 'mbs2.archive_helper':getHelper()
 local tArchiveContents = {
   dir('lua', {
+    dir('muhkuh', {
+      dir('plugins', {
+        file('lua/muhkuh/plugins/reference.lua'),
+        file('lua/muhkuh/plugins/ringbuffer.lua'),
+        file('lua/muhkuh/plugins/uarthelper.lua')
+      })
+    }),
+
     file('lua/parameter_instances.lua'),
     file('lua/parameter.lua'),
     file('lua/parameter_multi_choice.lua'),
