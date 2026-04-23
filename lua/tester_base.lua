@@ -168,6 +168,8 @@ function TesterBase:mbin_open(strFilename, tPlugin)
       strAsic = "50"
     elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX10 then
       strAsic = "10"
+    elseif tAsicTyp==romloader.ROMLOADER_CHIPTYP_NETX9X2_MPW then
+      strAsic = '9x2mpw'
     else
       error(string.format('Unknown chiptyp %s.', tostring(tAsicTyp)))
     end
