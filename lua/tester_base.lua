@@ -378,7 +378,7 @@ function TesterBase:sendLogEvent(strEventId, atAttributes)
   else
     local tLog = self.tLog
     if tLog~=nil then
-      tLog.info('Log event: %s', strData)
+      tLog.debug('Log event: %s', strData)
     else
       print(string.format('Log event: %s', strData))
     end
